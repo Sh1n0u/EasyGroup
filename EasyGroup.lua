@@ -1,5 +1,5 @@
 -- Initialisation DB
-easyGroupDB = easyGroupDB or {
+EasyGroupDB = EasyGroupDB or {
     enabled = true,
     keyword = "Iloveshinou",
     channels = {
@@ -49,7 +49,7 @@ for eventName in pairs(extraEvents) do
 end
 
 local function ShouldInvite(msg, sender)
-	if not easyGroupDB.enabled then
+	if not EasyGroupDB.enabled then
 		return false
 	end
 
@@ -69,7 +69,7 @@ local function ShouldInvite(msg, sender)
 	end
 
 -- Vérif si le groupe ou raid est full 
-	if GetNumGroupMembers() >= 4 or GetNumRaidMembers() >= 39 then
+	if GetNumPartyMembers() >= 4 or GetNumRaidMembers() >= 39 then
 		return false
 	end
 
@@ -77,7 +77,7 @@ local function ShouldInvite(msg, sender)
 end
 
 frame:SetScript("OnEvent", function(self, event, ...)
-	local msg, sender, _, _, _, _, _, channelName = ...
+	local msg, sender, _, _, _, _, _, channelNumber, channelName = ...
 
 	if event == "ADDON_LOADED" and ... == "EasyGroup" then
 		DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00EasyGroup chargé! Tapez |cFFFFD100/eg pour ouvrir l'interface|r")
@@ -95,8 +95,8 @@ frame:SetScript("OnEvent", function(self, event, ...)
 
 -- Gestion EventChannel numéroté
 	if event == "CHAT_MSG_CHANNEL" then
-		local chanNumKey = tostring(channelName)
-		local chanNameKey = channelName and channelName:match("^(%a+)%s*%d*$")
+		local chanNumKey = tostring(channelNumber)
+		local chanNameKey = channelName and type(channelName) == "string" and channelName:match("^(%a+)%s*%d*$")
 		local isAllowed = EasyGroupDB.channels[chanNumKey] 
 			or (chanNameKey and EasyGroupDB.channels[chanNameKey])
 
