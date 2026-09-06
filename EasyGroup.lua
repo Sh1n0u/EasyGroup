@@ -62,10 +62,16 @@ local function ShouldInvite(msg, sender)
         return false
     end
 
-    -- Vérif si le groupe ou le raid est plein (à faire AVANT de valider l'invitation)
-    if GetNumPartyMembers() >= 4 or GetNumRaidMembers() >= 39 then
-        return false
-    end
+    -- Vérif si le groupe ou le raid est plein
+    if GetNumRaidMembers() > 0 then
+		if GetNumRaidMembers() >= 40 then
+			return false
+		end
+	else
+		if GetNumPartyMembers() >= 5 then
+			return false
+		end
+	end
 
     -- Vérif du mot-clé (avec plain = true pour neutraliser les caractères spéciaux)
     local keyword = EasyGroupDB.keyword:lower()
