@@ -114,7 +114,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
 				end
 			end
 		end
-	end)
+	end
 
 	if isAllowed and ShouldInvite(msg, sender) then
 		InviteUnit(sender)
