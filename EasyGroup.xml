@@ -20,6 +20,9 @@
                 self:SetScript("OnDragStart", self.StartMoving)
                 self:SetScript("OnDragStop", self.StopMovingOrSizing)
             </OnLoad>
+			<OnShow>
+				if EasyGroup_UpdateUI then EasyGroup_UpdateUI() end
+			</OnShow>
         </Scripts>
 
         <Layers>
