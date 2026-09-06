@@ -97,15 +97,29 @@ frame:SetScript("OnEvent", function(self, event, ...)
 -- Gestion EventChannel numéroté
 	if event == "CHAT_MSG_CHANNEL" then
 		local chanNumKey = tostring(channelNumber)
-		local chanNameKey = channelName and type(channelName) == "string" and channelName:match("^(%a+)%s*%d*$")
-		local isAllowed = EasyGroupDB.channels[chanNumKey] 
-			or (chanNameKey and EasyGroupDB.channels[chanNameKey])
+		local channameClean = channelName and tostring(channelName):lower():gsub("%s+", "") or ""
+		
+		local isAllowed = false
 
-		if isAllowed and ShouldInvite(msg, sender) then
-			InviteUnit(sender)
-		end	
+		if EasyGroupDB.channels[chanNumKey] then
+			isAllowed = true
+		end
+
+	if not isAllowed and EasyGroupDB.channels then
+		for dbChanKey, enable in pairs(EasyGroupDB.channels) do
+			if enabled and type(dbChanKey) == "string" then
+				if dbChanKey:lower():gsub("%s+", "") == chanNameClean then
+					isAllowed = true
+					break
+				end
+			end
+		end
+	end)
+
+	if isAllowed and ShouldInvite(msg, sender) then
+		InviteUnit(sender)
 	end
-end)
+end
 
 -- Commande Slash
 SLASH_EASYGROUP1 = "/eg"
