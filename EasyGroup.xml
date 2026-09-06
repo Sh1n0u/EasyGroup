@@ -129,8 +129,6 @@
                 { id = "Yell",             name = "Crier (Yell)" },
                 { id = "Guild",            name = "Guilde" },
                 { id = "Officer",          name = "Officier" },
-                { id = "Party",            name = "Groupe" },
-                { id = "Raid",             name = "Raid" },
                 { id = "Battleground",     name = "Champ de bataille" },
                 { id = "General",          name = "Général" },
                 { id = "Trade",            name = "Commerce" },
