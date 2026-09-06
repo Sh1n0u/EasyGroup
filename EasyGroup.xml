@@ -108,11 +108,11 @@
             local statusText = _G["EasyGroupUIStatusText"]
 
             if EasyGroupDB.enabled then
-				if btn then btn:SetTex("OFF") end
-				if statustext then statusText:SetText("Statut : Activé") end
+				if btn then btn:SetText("OFF") end
+				if statusText then statusText:SetText("Statut : Activé") end
 			else
-				if btn then btn:SetTex("ON") end
-				if statustext then statusText:SetText("Statut : Désactivé") end
+				if btn then btn:SetText("ON") end
+				if statusText then statusText:SetText("Statut : Désactivé") end
 			end
 
             local kwBox = _G["EasyGroupUIKeywordBox"]
