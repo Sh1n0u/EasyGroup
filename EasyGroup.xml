@@ -104,14 +104,16 @@
         local checkboxes = {}
 
         function EasyGroup_UpdateUI()
+			local btn = _G["EasyGroupUIToggleButton"] or _G["EasyGroupUIToggleButton"]
             local statusText = _G["EasyGroupUIStatusText"]
-            if statusText then
-                if EasyGroupDB.enabled then
-                    statusText:SetText("|cFF00FF00ACTIF|r")
-                else
-                    statusText:SetText("|cFFFF0000INACTIF|r")
-                end
-            end
+
+            if EasyGroupDB.enabled then
+				if btn then btn:SetTex("OFF") end
+				if statustext then statusText:SetText("Statut : Activé") end
+			else
+				if btn then btn:SetTex("ON") end
+				if statustext then statusText:SetText("Statut : Désactivé") end
+			end
 
             local kwBox = _G["EasyGroupUIKeywordBox"]
             if kwBox then
