@@ -64,7 +64,7 @@ local function ShouldInvite(msg, sender)
 
 -- Vérif du mot clef	
 	local keyword = EasyGroupDB.keyword:lower()
-	if msg:lower():find(keyword) then
+	if msg:lower():find(keyword, 1, true) then
 		return true
 	end
 
