@@ -61,6 +61,10 @@ local function ShouldInvite(msg, sender)
 		return false
 	end
 
+	if sender == UnitName("player") then
+		return false
+	end
+
 	local keyword = EasyGroupDB.keyword:lower()
 	if msg:lower():find(keyword) then
 		return true
