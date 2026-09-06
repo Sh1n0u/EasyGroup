@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: EasyGroup
+## Notes: Invitation automatique des joueurs en utilisant des mobs clefs choisi par l'opérateur
+## Author: Shinou
+## SavedVariables: EasyGroupDB
+
+EasyGroup.lua
+EasyGroup.xml
