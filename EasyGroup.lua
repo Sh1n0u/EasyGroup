@@ -1,7 +1,7 @@
 -- Initialisation DB
 EasyGroupDB = EasyGroupDB or {
     enabled = true,
-    keyword = "Iloveshinou",
+    keyword = "Ex : Iloveshinou",
     channels = {
         ["1"] = false,
 		["2"] = false,
@@ -49,31 +49,32 @@ for eventName in pairs(extraEvents) do
 end
 
 local function ShouldInvite(msg, sender)
-	if not EasyGroupDB.enabled then
-		return false
-	end
+    if not EasyGroupDB.enabled then
+        return false
+    end
 
-	if not EasyGroupDB.keyword or EasyGroupDB.keyword == "" then
-		return false
-	end
+    -- Blocage d'invitation si le mot-clé est vide ou ne contient que des espaces
+    if not EasyGroupDB.keyword or EasyGroupDB.keyword:gsub("%s+", "") == "" then
+        return false
+    end
 
--- Ignore ses propres messages
-	if sender == UnitName("player") then
-		return false
-	end
+    -- Ignore ses propres messages
+    if sender == UnitName("player") then
+        return false
+    end
 
--- Vérif du mot clef	
-	local keyword = EasyGroupDB.keyword:lower()
-	if msg:lower():find(keyword, 1, true) then
-		return true
-	end
+    -- Vérif si le groupe ou le raid est plein (à faire AVANT de valider l'invitation)
+    if GetNumPartyMembers() >= 4 or GetNumRaidMembers() >= 39 then
+        return false
+    end
 
--- Vérif si le groupe ou raid est full 
-	if GetNumPartyMembers() >= 4 or GetNumRaidMembers() >= 39 then
-		return false
-	end
+    -- Vérif du mot-clé (avec plain = true pour neutraliser les caractères spéciaux)
+    local keyword = EasyGroupDB.keyword:lower()
+    if msg:lower():find(keyword, 1, true) then
+        return true
+    end
 
-	return true
+    return false
 end
 
 frame:SetScript("OnEvent", function(self, event, ...)
