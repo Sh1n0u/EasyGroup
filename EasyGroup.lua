@@ -20,8 +20,6 @@ easyGroupDB = easyGroupDB or {
 		["GuildRecruitment"] = true,
 		["Guild"] = true,
 		["Officer"] = true,
-		["Party"] = true,
-		["Raid"] = true,
 		["Battleground"] = true,
 		["Whisper"] = true,
 		["Say"] = true,
@@ -40,8 +38,6 @@ local extraEvents = {
 	["CHAT_MSG_YELL"] = "Yell",
 	["CHAT_MSG_GUILD"] = "Guild",
 	["CHAT_MSG_OFFICER"] = "Officer",
-	["CHAT_MSG_PARTY"] = "Party",
-	["CHAT_MSG_PARTY_LEADER"] = "Party Leader",
 	["CHAT_MSG_RAID"] = "Raid",
 	["CHAT_MSG_RAID_LEADER"] = "Raid Leader",
 	["CHAT_MSG_BATTLEGROUND"] = "Battleground"
@@ -61,14 +57,17 @@ local function ShouldInvite(msg, sender)
 		return false
 	end
 
+-- Ignore ses propres messages
 	if sender == UnitName("player") then
 		return false
 	end
 
+-- Vérif du mot clef	
 	local keyword = EasyGroupDB.keyword:lower()
 	if msg:lower():find(keyword) then
 		return true
 	end
+
 -- Vérif si le groupe ou raid est full 
 	if GetNumGroupMembers() >= 4 or GetNumRaidMembers() >= 39 then
 		return false
@@ -85,9 +84,37 @@ frame:SetScript("OnEvent", function(self, event, ...)
 		return
 	end
 
-	if event =="CHAT_MSG_CHANNEL" then
-		if easyGroupDB.channels[channelName] and ShouldInvite(msg, sender) then
+-- Gestion EventChannel
+	local key = extraEvents[event]
+	if key then
+		if EasyGroupDB.channels[key] and ShouldInvite(msg, sender) then
 			InviteUnit(sender)
-			SendChatMessage("Invitation envoyée à " .. sender .. " !", "WHISPER", nil, sender)
 		end
+		return
+	end
 
+-- Gestion EventChannel numéroté
+	if event == "CHAT_MSG_CHANNEL" then
+		local chanNumKey = tostring(channelName)
+		local chanNameKey = channelName and channelName:match("^(%a+)%s*%d*$")
+		local isAllowed = EasyGroupDB.channels[chanNumKey] 
+			or (chanNameKey and EasyGroupDB.channels[chanNameKey])
+
+		if isAllowed and ShouldInvite(msg, sender) then
+			InviteUnit(sender)
+		end	
+	end
+end)
+
+-- Commande Slash
+SLASH_EASYGROUP1 = "/eg"
+SLASH_EASYGROUP2 = "/easygroup"
+SlashCmdList["EASYGROUP"] = function()
+	if EasyGroupUI then
+		if EasyGroupUI:IsShown() then
+			EasyGroupUI:Hide()
+		else
+			EasyGroupUI:Show()
+		end
+	end
+end
