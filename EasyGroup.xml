@@ -1,146 +1,158 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" 
-	xmlns:xsi="http://www.w3.org/XMLSchema-instance"
-	xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    
+    <Frame name="EasyGroupUI" parent="UIParent" hidden="true" movable="true" enableMouse="true" inherits="BasicFrameTemplateWithInset">
+        <Size x="360" y="480"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        
+        <Scripts>
+            <OnLoad>
+                self:RegisterForDrag("LeftButton")
+                self:SetScript("OnDragStart", self.StartMoving)
+                self:SetScript("OnDragStop", self.StopMovingOrSizing)
+            </OnLoad>
+        </Scripts>
 
-	<Frame name="EasyGroupUI" parent="UIParent" hidden="true" movable="true" enalbeMouse="true" inherits="BasicFrameTemplateWithInset">
-		<Size x="400" y="300"/>
-		<Anchors>
-			<Anchor point="CENTER"/>
-		</Anchors>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="EasyGroup Configuration">
+                    <Anchors>
+                        <Anchor point="TOP" x="0" y="-10"/>
+                    </Anchors>
+                </FontString>
+                <FontString inherits="GameFontHighlightSmall" text="Mot-clé à écouter :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="20" y="-75"/>
+                    </Anchors>
+                </FontString>
+                <FontString inherits="GameFontHighlightSmall" text="Canaux à écouter :">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="20" y="-135"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
 
-		<Scripts>
-			<OnLoad>
-				self:RegisterForDrag("LeftButton");
-				self:SetScript("OnDragStart", self.StartMoving);
-				self:SetScript("OnDragStop", self.StopMovingOrSizing);
-			</OnLoad>
-		</Scripts>
+        <Frames>
+            <!-- Bouton ON / OFF -->
+            <Button name="$parentToggleButton" inherits="UIPanelButtonTemplate" text="ON / OFF">
+                <Size x="100" y="25"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="20" y="-40"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        EasyGroupDB.enabled = not EasyGroupDB.enabled
+                        if EasyGroup_UpdateUI then EasyGroup_UpdateUI() end
+                    </OnClick>
+                </Scripts>
+            </Button>
 
-		<Layers>
-			<Layer level="ARTWORK">
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="EasyGroup Configuration">
-					<Anchors>
-						<Anchor point="TOP" x="0" y="-10"/>
-					</Anchors>
-				</FontString>
-				<FontString inherits="GameFontHighlightSmall" text="Mot-clé à écouter : ">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="20" y="-75"/>
-					</Anchors>
-				</FontString>
-				<FontString inherits="GameFontHighlightSmall" text="Canaux à écouter :">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="20" y="-135"/>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
+            <FontString name="$parentStatusText" inherits="GameFontNormal">
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentToggleButton" relativePoint="RIGHT" x="15" y="0"/>
+                </Anchors>
+            </FontString>
 
-		<Frames>
-			<!-- Button ON / OFF -->
-			<layer level="ARTWORK">
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="ON / OFF">
-					<Size x="100" y="25"/>
-					<Anchors>
-						<Anchor point="TOPLEFT" x="20" y="-40"/>
-					</Anchors>
-					<Scripts>
-						<OnClick>
-							EasyGroupDB.enable = not EasyGroupDB.enabled
-							EasyGroup_UpdateUI()
-						</OnClick>
-					</Scripts>
-				</FontString>
+            <!-- Champ texte du mot-clé -->
+            <EditBox name="$parentKeywordBox" inherits="InputBoxTemplate" autoFocus="false">
+                <Size x="180" y="20"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="20" y="-95"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        EasyGroupDB.keyword = self:GetText()
+                    </OnTextChanged>
+                    <OnEnterPressed>
+                        self:ClearFocus()
+                    </OnEnterPressed>
+                    <OnEscapePressed>
+                        self:ClearFocus()
+                    </OnEscapePressed>
+                </Scripts>
+            </EditBox>
 
-				<fontString name="$parentStatusText" inherits="GameFontNormal">
-					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentToggleButton" relativePoint="RIGHT" x="15" y="0"/>
-					</Anchors>
-				</fontString>
-			</layer>
+            <!-- ScrollFrame pour gérer la liste de canaux -->
+            <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                <Size x="300" y="300"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="20" y="-155"/>
+                </Anchors>
+                <ScrollChild>
+                    <Frame name="EasyGroupChannelContainer">
+                        <Size x="280" y="600"/>
+                    </Frame>
+                </ScrollChild>
+            </ScrollFrame>
+        </Frames>
+    </Frame>
 
-			<!-- Inputbox mot clé -->
-				<EditBox name="$parentKeywordbox" inherits="InputBoxTemplate" autoFocus="false">
-					<Size x="180" y="20"/>
-					<Anchors>
-						<Anchor point="TOPLEFT" x="20" y="-95"/>
-					</Anchors>
-					<Scripts>
-						<OnTextChanged>
-							EasyGroupDB.keyword = self:GetText()
-						</OnTextChanged>
-						<OnEnterPressed>
-							self:ClearFocus()
-						</OnEnterPressed>
-						<OnEscapePressed>
-							self:ClearFocus()
-						</OnEscapePressed>
-					</Scripts>
-				</EditBox>
+    <Script>
+        local checkboxes = {}
 
-			<!-- ScrollFrame -->
-				<ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-					<Size x="300" y="300"/>
-					<Anchors>
-						<Anchor point="TOPLEFT" x="20" y="-155"/>
-					</Anchors>
-					<ScrollChild>
-						<Frame name="EasyGroupChannelContainer">
-							<Size x="280" y="600"/>
-						</Frame>
-					</ScrollChild>
-				</ScrollFrame>
-		</Frames>
-	</Frame>
+        function EasyGroup_UpdateUI()
+            local statusText = _G["EasyGroupUIStatusText"]
+            if statusText then
+                if EasyGroupDB.enabled then
+                    statusText:SetText("|cFF00FF00ACTIF|r")
+                else
+                    statusText:SetText("|cFFFF0000INACTIF|r")
+                end
+            end
 
-	<Script>
-		local checkboxes = {}
+            local kwBox = _G["EasyGroupUIKeywordBox"]
+            if kwBox then
+                kwBox:SetText(EasyGroupDB.keyword or "")
+            end
 
-		function EasyGroup_UpdateUI()
-			local statusText = _G["EasyGroupUIStatusText"]
-			if EasyGroupDB.enabled then
-				StatusText:SetText("|cFF00FF00ACTIF|r")
-			else
-				StatusText:SetText("|cFFFF0000INACTIF|r")
-			end
+            for _, cb in ipairs(checkboxes) do cb:Hide() end
+            checkboxes = {}
 
-			_G["EasyGroupUIKeywordbox"]:SetText(EasyGroupDB.keyword or "")
+            local defaultChannels = {
+                { id = "Whisper",          name = "Chuchotements (Whisper)" },
+                { id = "Say",              name = "Dire (Say)" },
+                { id = "Yell",             name = "Crier (Yell)" },
+                { id = "Guild",            name = "Guilde" },
+                { id = "Officer",          name = "Officier" },
+                { id = "Party",            name = "Groupe" },
+                { id = "Raid",             name = "Raid" },
+                { id = "Battleground",     name = "Champ de bataille" },
+                { id = "General",          name = "Général" },
+                { id = "Trade",            name = "Commerce" },
+                { id = "LocalDefense",     name = "DéfenseLocale" },
+                { id = "LookingForGroup",  name = "RechercheDeGroupe" },
+                { id = "GuildRecruitment", name = "RecrutementDeGuilde" },
+                { id = "World",            name = "World" },
+            }
 
-			for _, cb in ipairs(checkboxes) do cb:Hide() end
-			checkboxes = {}
+            for i = 1, 9 do
+                table.insert(defaultChannels, { id = tostring(i), name = "Canal n°" .. i })
+            end
 
-			local defaultChannels = {
-				{ id = "GuildRecruitment", name = "Recrutement de guilde" },
-				{ id = "Guild", name = "Guilde" },
-				{ id = "Officer", name = "Officier" },
-				{ id = "Party", name = "Groupe" },
-				{ id = "Raid", name = "Raid" },
-				{ id = "Battleground", name = "Champ de bataille" },
-				{ id = "Whisper", name = "Chuchotement" },
-				{ id = "Say", name = "Dire" }
-			}
+            local parent = _G["EasyGroupChannelContainer"]
+            if not parent then return end
+            
+            local yOffset = 0
 
-			for i = 1, 9 do
-				table.insert(defaultChannels, { id = tostring(i), name = "Canal n°" .. i })
-			end
+            for _, chan in ipairs(defaultChannels) do
+                local cb = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
+                cb:SetPoint("TOPLEFT", 0, yOffset)
+                
+                local label = cb:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+                label:SetPoint("LEFT", cb, "RIGHT", 5, 0)
+                label:SetText(chan.name)
 
-			local parent = _G["EasyGroupChannelContainer"]
-			local yOffset = 0
+                cb:SetChecked(EasyGroupDB.channels[chan.id] == true)
 
-			for _, chan in ipairs(defaultChannels) do
-				local cb = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
-				cb:SetPoint("TOPLEFT", 0, -yOffset)
+                cb:SetScript("OnClick", function(self)
+                    EasyGroupDB.channels[chan.id] = self:GetChecked() and true or nil
+                end)
 
-				local lavel = cb:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-				lavel:SetPoint("LEFT", cb, "RIGHT", 5, 0)
-				lavel:SetText(chan.name)
-
-				cb:SetChecked(EasyGroupDB.channels[chan.id] = self:GetChecked() and true or nil
-			end)
-
-			table.insert(checkboxes, cb)
-			yOffset = yOffset - 24
-		end
-	end
-	</Script>
+                table.insert(checkboxes, cb)
+                yOffset = yOffset - 24
+            end
+        end
+    </Script>
 </Ui>
