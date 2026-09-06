@@ -133,3 +133,4 @@ SlashCmdList["EASYGROUP"] = function()
 		end
 	end
 end
+end
