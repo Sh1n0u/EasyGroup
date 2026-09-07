@@ -64,15 +64,17 @@ local function ShouldInvite(msg, sender)
 
     -- Vérif si le groupe ou le raid est plein
     if GetNumRaidMembers() > 0 then
-		if GetNumRaidMembers() >= 40 then
+		if GetNumRaidMembers() >= 39 then
 			return false
 		end
 	else
-		if GetNumPartyMembers() >= 5 then
+		if GetNumPartyMembers() >= 4 then
 			return false
 		end
 	end
 
+	-- Découpage et vérif de chaque mot clé séparé par un point virgule
+	
     -- Vérif du mot-clé (avec plain = true pour neutraliser les caractères spéciaux)
     local keyword = EasyGroupDB.keyword:lower()
     if msg:lower():find(keyword, 1, true) then
