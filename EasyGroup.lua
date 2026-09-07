@@ -76,17 +76,17 @@ local function ShouldInvite(msg, sender)
 	-- Découpage et vérif de chaque mot clé séparé par un point virgule
 	local msgLower = msg:lower()
 
-    for keyworld in string.gmatch(EasyGroupDB.keyword, "[^;]") do
+    for keyword in string.gmatch(EasyGroupDB.keyword, "[^;]+") do
         -- Suppression des espaces inutiles avant et après le mot clé
         local cleanKeyword = keyword:match("^%s*(.-)%s*$"):lower()
 
-        if cleahnKeyword ~= "" then
+        if cleanKeyword ~= "" then
             if msgLower:find(cleanKeyword, 1, true) then
                 return true
             end
         end
     end
-            
+
     return false
 end
 
