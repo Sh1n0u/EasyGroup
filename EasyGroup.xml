@@ -46,6 +46,21 @@
         </Layers>
 
         <Frames>
+
+            <!-- Bouton de fermeture -->
+            <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
+                        <Offset x="-3" y="-3"/>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        self:GetParent():Hide()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
             <!-- Bouton ON / OFF -->
             <Button name="$parentToggleButton" inherits="UIPanelButtonTemplate" text="ON / OFF">
                 <Size x="100" y="25"/>
@@ -98,21 +113,6 @@
                 </ScrollChild>
             </ScrollFrame>
         </Frames>
-
-        <!-- Bouton de fermeture -->
-        <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
-            <Anchors>
-                <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
-                    <Offset x="-3" y="-3"/>
-                </Anchor>
-            </Anchors>
-            <Scripts>
-                <OnClick>
-                    self:GetParent():Hide()
-                </OnClick>
-            </Scripts>
-        </Button>
-
         
     </Frame>
 
